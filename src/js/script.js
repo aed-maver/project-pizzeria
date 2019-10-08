@@ -6,6 +6,7 @@
   const select = {
     templateOf: {
       menuProduct: '#template-menu-product',
+      cartProduct: '#template-cart-product', // CODE ADDED
     },
     containerOf: {
       menu: '#product-list',
@@ -23,15 +24,34 @@
       imageWrapper: '.product__images',
       amountWidget: '.widget-amount',
       cartButton: '[href="#add-to-cart"]',
-
     },
     widgets: {
       amount: {
-        input: 'input[name="amount"]',
+        input: 'input.amount', // CODE CHANGED
         linkDecrease: 'a[href="#less"]',
         linkIncrease: 'a[href="#more"]',
       },
     },
+    // CODE ADDED START
+    cart: {
+      productList: '.cart__order-summary',
+      toggleTrigger: '.cart__summary',
+      totalNumber: `.cart__total-number`,
+      totalPrice: '.cart__total-price strong, .cart__order-total .cart__order-price-sum strong',
+      subtotalPrice: '.cart__order-subtotal .cart__order-price-sum strong',
+      deliveryFee: '.cart__order-delivery .cart__order-price-sum strong',
+      form: '.cart__order',
+      formSubmit: '.cart__order [type="submit"]',
+      phone: '[name="phone"]',
+      address: '[name="address"]',
+    },
+    cartProduct: {
+      amountWidget: '.widget-amount',
+      price: '.cart__product-price',
+      edit: '[href="#edit"]',
+      remove: '[href="#remove"]',
+    },
+    // CODE ADDED END
   };
 
   // ELEMENT CLASS NAMES - MOSTLY ACTIVE
@@ -40,6 +60,11 @@
       wrapperActive: 'active',
       imageVisible: 'active',
     },
+    // CODE ADDED START
+    cart: {
+      wrapperActive: 'active',
+    },
+    // CODE ADDED END
   };
 
   // OTHER SETTINGS LIKE AMOUNTS VALUES FOR PRODUCT INGRIDIENTS
@@ -48,12 +73,20 @@
       defaultValue: 1,
       defaultMin: 1,
       defaultMax: 9,
-    }
+    }, // CODE CHANGED
+    // CODE ADDED START
+    cart: {
+      defaultDeliveryFee: 20,
+    },
+    // CODE ADDED END
   };
 
   // COMPILATION OF HANDLEBAR TEMPLATE
   const templates = {
     menuProduct: Handlebars.compile(document.querySelector(select.templateOf.menuProduct).innerHTML),
+    // CODE ADDED START
+    cartProduct: Handlebars.compile(document.querySelector(select.templateOf.cartProduct).innerHTML),
+    // CODE ADDED END
   };
 
   class Product {
@@ -73,7 +106,6 @@
 
     renderInMenu(){
       const thisProduct = this;
-      console.log(`\n \t renderInMenu Works`);
 
       /* generate HTML based on template */
       const generateHTML = templates.menuProduct(thisProduct.data);
@@ -90,7 +122,6 @@
 
     getElements(){
       const thisProduct = this;
-      console.log(`\n \t getElements Works`);
 
       thisProduct.accordionTrigger = thisProduct.element.querySelector(select.menuProduct.clickable);
 
@@ -110,7 +141,6 @@
 
     initAccordion(){
       const thisProduct = this;
-      console.log(`\n \t initAccordion Works`);
 
       /* find the clickable trigger (the element that should react to clicking) */
       //const productName = thisProduct.element.querySelector('h3.product__name');
@@ -148,7 +178,6 @@
 
     initOrderForm(){
       const thisProduct = this;
-      console.log(`\n \t initOrderForm works`);
 
       thisProduct.form.addEventListener('submit', function(event){
         event.preventDefault();
@@ -170,7 +199,6 @@
 
     initAmountWidget(){
       const thisProduct = this;
-      console.log(`\n \t initAmountWidget works -> runs process Order on UPDATED event`);
 
       thisProduct.amountWidget = new AmountWidget(thisProduct.amountWidgetElem);
 
@@ -180,9 +208,8 @@
     }
 
     processOrder(){
-      console.log('\n \t processOrder runs');
+
       const thisProduct = this;
-      console.log(thisProduct);
 
       /* read all data from the form (using utils.serializeFormToObject) and save it to const formData */
       const formData = utils.serializeFormToObject(thisProduct.form);
@@ -190,7 +217,7 @@
       console.dir(formData);
 
       /* set variable price to equal thisProduct.data.price */
-      console.log(`thisProduct.data.price is`, thisProduct.data.price);
+
       let price = thisProduct.data.price;
 
       /* START LOOP: for each paramId in thisProduct.data.params */
@@ -255,7 +282,6 @@
   class AmountWidget{
     constructor(element){
       const thisWidget = this;
-      console.log(`new AmountWidget was crated -> triggers UPDATED Announce`);
 
       thisWidget.getElements(element);
       thisWidget.value = settings.amountWidget.defaultValue;
@@ -267,7 +293,6 @@
 
     getElements(element){
       const thisWidget = this;
-      console.log(`Widget - getElements works`);
 
       thisWidget.element = element;
       thisWidget.input = thisWidget.element.querySelector(select.widgets.amount.input);
@@ -277,8 +302,6 @@
 
     setValue(value){
       const thisWidget = this;
-      console.log(`current value is: ${thisWidget.value}`);
-      console.log(`Widget - setValue works and gets: ${value} -> triggers UPDATED Announce`);
 
       const newValue = parseInt(value);
 
@@ -294,7 +317,6 @@
 
     initActions(){
       const thisWidget = this;
-      console.log(`\n \t Widget - initActions works`);
 
       thisWidget.input.addEventListener('change', function(){
         thisWidget.setValue(thisWidget.input.value);
@@ -306,10 +328,9 @@
 
       thisWidget.linkIncrease.addEventListener('click', function(event){
         event.preventDefault();
-        console.log(`CLICK WAS DONE`);
-        console.log(`thisWidget.value is ${thisWidget.value}`);
+
         thisWidget.setValue(thisWidget.value + 1);
-        console.log(`thisWidget.value after click is ${thisWidget.value}`);
+
       });
     }
 
@@ -317,8 +338,6 @@
       const thisWidget = this;
       const event = new Event('updated');
 
-      console.log(`Widget - event UPDATED was Announced`);
-      console.log(event);
       thisWidget.element.dispatchEvent(event);
     }
   }
