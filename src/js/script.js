@@ -343,6 +343,48 @@
   }
 
   // OBJECT THAT RUN'S ALL PARTS OF APP
+
+  class Cart {
+    constructor(element){
+      const thisCart = this;
+
+      thisCart.products = [];
+
+      thisCart.getElements(element);
+      thisCart.initActions();
+
+      console.log('new Cart', thisCart);
+    }
+
+    getElements(element){
+      const thisCart = this;
+      console.log(element);
+
+      thisCart.dom = {};
+
+      thisCart.dom.wrapper = element;
+      console.log(thisCart.dom.wprapper);
+
+      thisCart.dom.toggleTrigger = thisCart.dom.wrapper.querySelector(select.cart.toggleTrigger);
+    }
+
+    initActions(){
+      const thisCart = this;
+
+      thisCart.dom.toggleTrigger.addEventListener('click', function(event){
+        event.preventDefault();
+
+        console.log(thisCart.dom.wrapper.className.indexOf('active'));
+        if(thisCart.dom.wrapper.className.indexOf(classNames.cart.wrapperActive) != -1 ) {
+          thisCart.dom.wrapper.classList.remove(classNames.cart.wrapperActive);
+        } else {
+          thisCart.dom.wrapper.classList.add(classNames.cart.wrapperActive);
+          console.dir(thisCart.dom.wrapper.className);
+        }
+      });
+    }
+  }
+
   const app = {
     initMenu: function(){
       const thisApp = this;
@@ -356,11 +398,19 @@
       thisApp.data = dataSource;
     },
 
+    initCart: function(){
+      const thisApp = this;
+
+      const cartElem = document.querySelector(select.containerOf.cart);
+      thisApp.cart = new Cart(cartElem);
+    },
+
     init: function(){
       const thisApp = this;
 
       thisApp.initData();
       thisApp.initMenu();
+      thisApp.initCart();
     },
   };
 
