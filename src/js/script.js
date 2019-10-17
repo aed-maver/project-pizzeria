@@ -112,7 +112,7 @@
       /* generate HTML based on template */
       const generateHTML = templates.menuProduct(thisProduct.data);
       console.log('renderInMenu - thisProduct.data', thisProduct.data);
-      console.log('renderInMenu - generateHTML', generateHTML);
+      //console.log('renderInMenu - generateHTML', generateHTML);
 
       /* create element using utils.createElementFromHtml */
       thisProduct.element = utils.createDOMFromHTML(generateHTML);
@@ -469,9 +469,9 @@
     initAmountWidget(){
       const thisCartProduct = this;
 
-      thisCartProduct.amountWidget = new AmountWidget(thisCartProduct.dom.amountWidgetElem);
+      thisCartProduct.amountWidget = new AmountWidget(thisCartProduct.dom.amountWidget);
 
-      thisCartProduct.dom.amountWidgetElem.addEventListener('updated', function(){
+      thisCartProduct.dom.amountWidget.addEventListener('updated', function(){
         thisCartProduct.amount = thisCartProduct.amountWidget.value;
         thisCartProduct.price = thisCartProduct.priceSingle * thisCartProduct.amount;
         thisCartProduct.dom.price = thisCartProduct.price;
