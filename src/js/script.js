@@ -93,7 +93,9 @@
     constructor(id, data) {
       const thisProduct = this;
       thisProduct.id = id;
+      console.log('Product - thisProduct', thisProduct);
       thisProduct.data = data;
+      console.log('Product - thisProduct.data', thisProduct.data);
 
       thisProduct.renderInMenu();
       thisProduct.getElements();
@@ -109,6 +111,8 @@
 
       /* generate HTML based on template */
       const generateHTML = templates.menuProduct(thisProduct.data);
+      console.log('renderInMenu - thisProduct.data', thisProduct.data);
+      console.log('renderInMenu - generateHTML', generateHTML);
 
       /* create element using utils.createElementFromHtml */
       thisProduct.element = utils.createDOMFromHTML(generateHTML);
