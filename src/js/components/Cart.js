@@ -7,7 +7,6 @@ export class Cart {
     const thisCart = this;
 
     thisCart.products = [];
-    console.log('thisCart.products', thisCart.products);
 
     thisCart.deliveryFee = settings.cart.defaultDeliveryFee;
 
@@ -117,10 +116,7 @@ export class Cart {
   remove(cartProduct) {
     const thisCart = this;
 
-    //console.log('cartProduct', cartProduct);
-
     const index = thisCart.products.indexOf(cartProduct);
-    //console.log('index', index);
 
     thisCart.products.splice(index, 1);
     //console.log('thisCart.products after splice', thisCart.products);
