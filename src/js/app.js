@@ -7,7 +7,7 @@ const app = {
 
   initMenu: function(){
     const thisApp = this;
-    console.log('thisApp', this);
+
     for(let productData in thisApp.data.products){
       new Product(thisApp.data.products[productData].id, thisApp.data.products[productData]);
     }
@@ -17,25 +17,21 @@ const app = {
     const thisApp = this;
     thisApp.data = {};
     const url = settings.db.url + '/' + settings.db.product;
-    console.log(url);
 
     fetch(url)
       .then(function(rawResponse){
         return rawResponse.json();
       })
       .then(function(parsedResponse){
-        console.log('parseResponse', parsedResponse);
 
         /* save parsedResponse as thisApp.data.products */
         thisApp.data.products = parsedResponse;
-        console.log(`thisApp.data.products`, thisApp.data.products);
 
         /*  execute initMenu method */
         thisApp.initMenu();
-        console.log('thisApp.data.products', thisApp.data.products);
+
       });
 
-    console.log('thisApp.data', JSON.stringify(thisApp.data));
   },
 
   initCart: function(){
@@ -75,7 +71,7 @@ const app = {
 
         /* TODO: get page id from href */
         let id = clickedElement.getAttribute('href').replace('#', '');
-        //console.log(id.slice(1));
+        //
         thisApp.activePage(id);
         /* TODO: active page */
 
