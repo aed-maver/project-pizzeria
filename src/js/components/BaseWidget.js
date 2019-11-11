@@ -8,6 +8,7 @@ export class BaseWidget {
   }
 
   parseValue(newValue){
+    console.log('BaseWidget parseValue()');
     return parseInt(newValue);
   }
 
@@ -17,6 +18,7 @@ export class BaseWidget {
 
   renderValue(){
     const thisWidget = this;
+    console.log('BaseWidget renderValue()');
 
     console.log('Widget value:', thisWidget.value);
   }
@@ -39,6 +41,7 @@ export class BaseWidget {
 
   set value(assignedValue){
     const thisWidget = this;
+    console.log('Base Widget value()');
 
     const newValue = thisWidget.parseValue(assignedValue);
 
@@ -47,6 +50,6 @@ export class BaseWidget {
       thisWidget.announce();
     }
 
-    thisWidget.renderValue();
+    thisWidget.renderValue(assignedValue);
   }
 }

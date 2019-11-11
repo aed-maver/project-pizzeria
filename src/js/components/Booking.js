@@ -1,4 +1,4 @@
-import {select, templates} from '../settings.js';
+import {select, templates, classNames} from '../settings.js';
 import {utils} from '../utils.js';
 import {AmountWidget} from './AmountWidget.js';
 import { DatePicker } from './DatePicker.js';
@@ -35,6 +35,8 @@ export class Booking {
 
     thisBooking.dom.hoursAmount = thisBooking.dom.wrapper.querySelector(select.booking.hoursAmount);
 
+    thisBooking.dom.tables = thisBooking.dom.wrapper.querySelectorAll(select.booking.tables);
+
   }
 
   initWidgets() {
@@ -44,6 +46,10 @@ export class Booking {
     thisBooking.hoursAmount = new AmountWidget(thisBooking.dom.hoursAmount);
     thisBooking.datePicker = new DatePicker(thisBooking.dom.datePicker);
     thisBooking.hourPicker = new HourPicker(thisBooking.dom.hourPicker);
+
+    thisBooking.dom.wrapper.addEventListener('updated', () => {
+      thisBooking.updateDOM();
+    });
 
   }
   getData() {
@@ -114,6 +120,8 @@ export class Booking {
       thisBooking.makeBooked(value.date, value.hour, value.duration, value.table);
     }
 
+    this.updateDOM();
+
     //console.log(eventsRepeat);
     console.log('Current and Repeated Events in this.booked');
     console.log(this.booked);
@@ -130,8 +138,38 @@ export class Booking {
         this.booked[date][`${start}`].push(table);
       }
     }
-
     //console.log(this.booked);
     return this.booked;
+  }
+
+  updateDOM(){
+    const thisBooking = this;
+    console.log('updateDOM is working');
+    thisBooking.date = thisBooking.datePicker.value;
+
+    console.log(this.hourPicker);
+    console.log(thisBooking.hourPicker.value);
+
+    //thisBooking.hour = utils.hourToNumber(thisBooking.hourPicker.value);
+    thisBooking.hour = thisBooking.hourPicker.value;
+
+    console.log(thisBooking.dom.tables);
+    for(let table of this.dom.tables){
+      console.log(this.booked);
+      console.log(thisBooking.date);
+      console.log(table);
+      if(thisBooking.booked[thisBooking.date] &&
+        thisBooking.booked[thisBooking.date][thisBooking.hour] &&
+        thisBooking.booked[thisBooking.date][thisBooking.hour]
+          .indexOf(settings.booking.tableIdAttribute) > -1){
+        console.log(`added class ${classNames.booking.tableBooked}`);
+        table.classList.add(classNames.booking.tableBooked);
+        console.log(table);
+      } else {
+        console.log(`removed class ${classNames.booking.tableBooked}`);
+        table.classList.remove(classNames.booking.tableBooked);
+        console.log(table);
+      }
+    }
   }
 }
